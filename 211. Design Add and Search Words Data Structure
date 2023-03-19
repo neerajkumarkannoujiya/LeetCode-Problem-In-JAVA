@@ -1,0 +1,132 @@
+Design a data structure that supports adding new words and finding if a string matches any previously added string.
+
+Implement the WordDictionary class:
+
+WordDictionary() Initializes the object.
+void addWord(word) Adds word to the data structure, it can be matched later.
+bool search(word) Returns true if there is any string in the data structure that matches word or false otherwise. word may contain dots '.' where dots can be matched
+with any letter.
+ 
+
+Example:
+
+Input
+["WordDictionary","addWord","addWord","addWord","search","search","search","search"]
+[[],["bad"],["dad"],["mad"],["pad"],["bad"],[".ad"],["b.."]]
+Output
+[null,null,null,null,false,true,true,true]
+
+Explanation
+WordDictionary wordDictionary = new WordDictionary();
+wordDictionary.addWord("bad");
+wordDictionary.addWord("dad");
+wordDictionary.addWord("mad");
+wordDictionary.search("pad"); // return False
+wordDictionary.search("bad"); // return True
+wordDictionary.search(".ad"); // return True
+wordDictionary.search("b.."); // return True
+ 
+
+Constraints:
+
+1 <= word.length <= 25
+word in addWord consists of lowercase English letters.
+word in search consist of '.' or lowercase English letters.
+There will be at most 3 dots in word for search queries.
+At most 104 calls will be made to addWord and search.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+***********************************************************************************************************************************************************
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+class WordDictionary {
+    
+    class TrieNode {
+        boolean isWord;
+        Map<Character, TrieNode> edges = new HashMap<>();
+    }
+    
+    TrieNode root;
+    /** Initialize your data structure here. */
+    public WordDictionary() {
+        this.root = new TrieNode();
+    }
+    
+    /** Adds a word into the data structure. */
+    public void addWord(String word) {
+        char[] str = word.toCharArray();
+        TrieNode curr = root;
+        for (char c : str) {
+            while (!curr.edges.containsKey(c)) {
+                curr.edges.put(c, new TrieNode());
+            }
+            curr = curr.edges.get(c);
+        }
+        curr.isWord = true;
+    }
+    
+    /** Returns if the word is in the data structure. A word could contain the dot character '.' to represent any one letter. */
+    public boolean search(String word) {
+        return isMatch(word, 0, root);
+    }
+    private boolean isMatch(String word, int index, TrieNode node) {
+        if (word.length() <= index) {
+            if (node.isWord) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        if (word.charAt(index) == '.') {
+            boolean isValid = false;
+            for (TrieNode edge : node.edges.values()) {
+                if (isMatch(word, index + 1, edge)) {
+                    isValid = true;
+                }
+            }
+            return isValid;
+        } else {
+            if (node.edges == null || !node.edges.containsKey(word.charAt(index))) {
+                return false;
+            }
+            return isMatch(word, index + 1, node.edges.get(word.charAt(index)));
+        }
+    }
+}
+
+/**
+ * Your WordDictionary object will be instantiated and called as such:
+ * WordDictionary obj = new WordDictionary();
+ * obj.addWord(word);
+ * boolean param_2 = obj.search(word);
+ */
