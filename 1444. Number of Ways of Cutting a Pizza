@@ -1,0 +1,100 @@
+Given a rectangular pizza represented as a rows x cols matrix containing the following characters: 'A' (an apple) and '.' (empty cell) and given the integer k. You 
+have to cut the pizza into k pieces using k-1 cuts. 
+
+For each cut you choose the direction: vertical or horizontal, then you choose a cut position at the cell boundary and cut the pizza into two pieces. If you cut the 
+pizza vertically, give the left part of the pizza to a person. If you cut the pizza horizontally, give the upper part of the pizza to a person. Give the last piece of
+pizza to the last person.
+
+Return the number of ways of cutting the pizza such that each piece contains at least one apple. Since the answer can be a huge number, return this modulo 10^9 + 7.
+
+ 
+
+Example 1:
+
+
+
+Input: pizza = ["A..","AAA","..."], k = 3
+Output: 3 
+Explanation: The figure above shows the three ways to cut the pizza. Note that pieces must contain at least one apple.
+Example 2:
+
+Input: pizza = ["A..","AA.","..."], k = 3
+Output: 1
+Example 3:
+
+Input: pizza = ["A..","A..","..."], k = 1
+Output: 1
+ 
+
+Constraints:
+
+1 <= rows, cols <= 50
+rows == pizza.length
+cols == pizza[i].length
+1 <= k <= 10
+pizza consists of characters 'A' and '.' only.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+****************************************************************************************************************************************************************
+
+
+
+
+
+
+
+
+
+
+
+
+class Solution {
+    public int ways(String[] pizza, int k) {
+        r = pizza.length;
+        c = pizza[0].length();
+        dp = new int[r][c][k];
+        g = new int[r + 1][c + 1];
+        
+        for (int i = r - 1; i >= 0; i--) {
+            for (int j = c - 1; j >= 0; j--) {
+                g[i][j] = g[i][j + 1] + g[i + 1][j] - g[i + 1][j + 1] + (pizza[i].charAt(j) == 'A' ? 1 : 0);
+            }
+        }
+        return dfs(0, 0, k - 1);
+    }
+    
+    private int mod = 1000000007, r, c;
+    private int[][][] dp;
+    private int[][] g;
+    
+    private int dfs(int i, int j, int k) {
+        if (dp[i][j][k] != 0) return dp[i][j][k];
+        if (g[i][j] == 0) return 0;
+        if (k == 0) return 1;
+        
+        int res = 0;
+        for (int x = i + 1; x < r; x++) {
+            if (g[i][j] - g[x][j] > 0) res = (res + dfs(x, j, k - 1)) % mod;
+        }
+        for (int y = j + 1; y < c; y++) {
+            if (g[i][j] - g[i][y] > 0) res = (res + dfs(i, y, k - 1)) % mod;
+        }
+        dp[i][j][k] = res;
+        return res;
+    }
+}
