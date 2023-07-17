@@ -1,0 +1,124 @@
+You are given two non-empty linked lists representing two non-negative integers. The most significant digit comes first and each of their nodes contains a single 
+digit. Add the two numbers and return the sum as a linked list.
+
+You may assume the two numbers do not contain any leading zero, except the number 0 itself.
+
+ 
+
+Example 1:
+
+
+Input: l1 = [7,2,4,3], l2 = [5,6,4]
+Output: [7,8,0,7]
+Example 2:
+
+Input: l1 = [2,4,3], l2 = [5,6,4]
+Output: [8,0,7]
+Example 3:
+
+Input: l1 = [0], l2 = [0]
+Output: [0]
+ 
+
+Constraints:
+
+The number of nodes in each linked list is in the range [1, 100].
+0 <= Node.val <= 9
+It is guaranteed that the list represents a number that does not have leading zeros.
+ 
+
+Follow up: Could you solve it without reversing the input lists?
+
+
+
+
+
+
+
+
+
+
+
+
+
+******************************************************************************************************************************************************************
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode rev(ListNode head) {
+        if (head == null)
+            return null;
+        ListNode curr = head;
+        ListNode prev = null;
+        ListNode nex = null;
+        while (curr != null) {
+            nex = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = nex;
+        }
+        return prev;
+    }
+
+    public ListNode rev2(ListNode head) {
+        if (head == null) {
+            return null;
+        }
+        if (head.next == null) {
+            return head;
+        }
+        ListNode newHead = rev2(head.next);
+        head.next.next = head;
+        head.next = null;
+        return newHead;
+    }
+
+    public ListNode solve(ListNode head1, ListNode head2) {
+        int car = 0;
+        ListNode p = new ListNode(9);
+        ListNode ans = p;
+        while (head1 != null || head2 != null || car > 0) {
+            int sum = car;
+            if (head1 != null) {
+                sum += head1.val;
+                head1 = head1.next;
+            }
+            if (head2 != null) {
+                sum += head2.val;
+                head2 = head2.next;
+            }
+            int v = sum % 10;
+            car = sum / 10;
+            ans.next = new ListNode(v);
+            ans = ans.next;
+        }
+        return p.next;
+    }
+
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        ListNode l1rev = rev(l1);
+        ListNode l2rev = rev2(l2);
+        ListNode res = solve(l1rev, l2rev);
+        return rev(res);
+    }
+}
