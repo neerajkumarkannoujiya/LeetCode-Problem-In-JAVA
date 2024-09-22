@@ -19,9 +19,6 @@ Constraints:
 n == nums.length
 1 <= n <= 5 * 104
 -109 <= nums[i] <= 109
- 
-
-Follow-up: Could you solve the problem in linear time and in O(1) space?
 
 
 
@@ -31,6 +28,93 @@ Follow-up: Could you solve the problem in linear time and in O(1) space?
 
 
 
+
+
+********************************************************************************************************************************************************************
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+class Solution {
+    public int majorityElement(int[] nums) {
+
+        int count =0;
+        int ele =0;
+        for(int i=0;i<nums.length;i++){
+            if(count==0){
+                count =1;
+                ele = nums[i];
+            }
+            else if(nums[i]==ele){
+                count++;
+            }
+            else{
+                count--;
+            }
+        }
+        int count1=0;
+        for(int i=0;i<nums.length;i++){
+            if(nums[i]==ele){
+                count1++;
+            }
+        }
+        if(count1>nums.length/2){
+            return ele;
+        }
+        return -1;
+
+
+
+        // Map<Integer,Integer> hp = new HashMap<>();
+        // for(int i=0;i<nums.length;i++){
+        //     hp.put(nums[i],hp.getOrDefault(nums[i],0)+1);
+        // }
+
+        // for(Map.Entry<Integer,Integer> it:hp.entrySet()){
+        //     if(it.getValue()>(nums.length/2)){
+        //         return it.getKey();
+        //     }
+        // }
+        // return -1;
+
+
+
+        // if(nums.length==1){
+        //     return nums[0];
+        // }
+        // Arrays.sort(nums);
+        // int maxcount =0;
+        // int val =0;
+        // int i=1;
+        // while(i<nums.length){
+        //     int count = 0;
+        //     while(i<nums.length && nums[i]==nums[i-1]){
+        //         count++;
+        //         i++;
+        //     }
+        //     if(count>maxcount){
+        //         maxcount = count;
+        //         val = nums[i-1];
+        //     }
+        //     if(maxcount>=nums.length/2)return val;
+        //     i++;
+        // }
+        // return -1;
+        
+    }
+}
 
 
 ***********************************************************************************************************************************************************
